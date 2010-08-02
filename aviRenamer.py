@@ -1,51 +1,26 @@
 #!/usr/bin/python
 
-import re, string, sys, os;
+import sys, os
 
+verbose = False
+lista = []
+if os.path.isfile(sys.argv[2]): ficheiro=sys.argv[2] 
+else: sys.exit("ERROR :: File not found!")
 
-#
-# opcao -v  => verbose:    change.py -v file.txt == file1.avi renamed to ficheiro1.avi
-#
+if (len(sys.argv) > 2) and (sys.argv[1] == '-v'): verbose = True
 
-verbose = False;
-
-
-if (len(sys.argv) > 2) and (sys.argv[1] == '-v') : verbose = True;
-
-
-f = open('troca.txt', 'r')
-
-i = 0
-
-#for line in f:
-#	if(line!='\n'):
-#		print line,
-	
-#	i+=1;
-	
-
+f = open(ficheiro, 'r')
 path="."
 dirList=os.listdir(path)
 
-for fname in dirList:
-	basename, extension = os.path.splitext(fname)
-	if (extension == '.avi'):
-		print basename;
-		
-	for line in f:
-			print line;
-			
-	
-		
-	
-	
-		
+for fname in sorted(dirList):
+    basename, extension = os.path.splitext(fname)
+    if (extension == '.avi'):
+    	lista.append(fname)
 
+for i,line in enumerate(f):
+	line = line.strip()
+	os.rename(lista[j], line)
+	if verbose : print lista[i], "renamed to", line
 
-		
-
-
-f.close();	
-
-
-#if verbose : print "hello world: " + sys.argv[2]; 
+f.close()
