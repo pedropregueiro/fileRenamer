@@ -1,1 +1,5 @@
-h1. fileReader
+h1. fileRenamer
+
+Python script to rename files using another file with all the names
+
+...
