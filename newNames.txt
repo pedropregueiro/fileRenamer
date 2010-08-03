@@ -4,4 +4,4 @@ file3.avi
 file4.avi
 test1.txt
 test2.txt
-maisumteste.jpg
+anothertest.jpg
