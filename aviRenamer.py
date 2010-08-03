@@ -4,7 +4,6 @@ import sys, os, glob, getopt
 
 verbose = False
 renamer = False
-list = []
 files = []
 oldFiles = []
 
