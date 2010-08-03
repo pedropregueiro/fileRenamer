@@ -6,35 +6,46 @@ verbose = False
 renamer = False
 dry = True
 list = []
-ficheiros = []
+files = []
+oldFiles = []
 
-options, args = getopt.getopt(sys.argv[1:], 'rv', ['verbose','rename'])
-file = args[0];
-
-if not os.path.isfile(file):
-	sys.exit("ERROR :: File not found!")
-														 
+options, args = getopt.getopt(sys.argv[1:], 'rve:', ['extension=','verbose','rename'])														 
 for opt, arg in options:
 	if opt in ('-v', '--verbose'):
 		verbose = True
 	if opt in ('-r','--rename'):
 		renamer = True
+	if opt in ('-e', '--extension'):
+		if arg.startswith('.'):
+			ext = '*'+arg
+		else:
+			ext = '*.'+arg
 	else:
 		dry = False
-
+		
+file = args[0]
+if not os.path.isfile(file):
+	sys.exit("\nERROR :: File not found!\n")
 f = open(file, 'r')
 
 for line in f:
-	ficheiros.append(line.strip())
-	
-if (len(glob.glob('*.avi')) != len(ficheiros)):
-	exitErr = 'ERROR :: Number of .avi files and number of lines in ' + file + ' not equal!'
+	dotArray = line.strip().split(".")
+	if (dotArray[len(dotArray)-1] == ext.replace('*.','')) and (line != file):
+		files.append(line.strip())
+
+for elem in glob.glob(ext):
+	if elem != file:
+		oldFiles.append(elem)
+
+if len(oldFiles) == 0:
+	sys.exit('\nWARNING :: No files with extension ' + ext + ' in ' + os.path.abspath('.') + '\n')
+		
+if (len(oldFiles) != len(files)):
+	exitErr = '\nERROR :: Number of ' + ext + ' files ('+ str(len(oldFiles)) + ') and number of lines (' + str(len(files)) + ') in ' + file + ' not equal!\n'
 	sys.exit(exitErr)
 
-
-list = sorted(glob.glob('*.avi'))
-
-for i,line in enumerate(ficheiros):
+list = sorted(oldFiles)
+for i,line in enumerate(files):
 	if renamer:
 		if verbose: 
 			print list[i], "renamed to", line
@@ -42,4 +53,5 @@ for i,line in enumerate(ficheiros):
 	else:
 		print list[i], " --> ", line
 
+		
 f.close()
