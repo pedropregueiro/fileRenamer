@@ -1,22 +1,45 @@
 #!/usr/bin/python
 
-import sys, os, glob
+import sys, os, glob, getopt
 
 verbose = False
-lista = []
-if os.path.isfile(sys.argv[2]): ficheiro=sys.argv[2] 
-else: sys.exit("ERROR :: File not found!")
+renamer = False
+dry = True
+list = []
+ficheiros = []
 
-if (len(sys.argv) > 2) and (sys.argv[1] == '-v'): verbose = True
+options, args = getopt.getopt(sys.argv[1:], 'rv', ['verbose','rename'])
+file = args[0];
 
-f = open(ficheiro, 'r')
+if not os.path.isfile(file):
+	sys.exit("ERROR :: File not found!")
+														 
+for opt, arg in options:
+	if opt in ('-v', '--verbose'):
+		verbose = True
+	if opt in ('-r','--rename'):
+		renamer = True
+	else:
+		dry = False
 
-for item in glob.glob('*.avi'):
-	lista.append(item)
+f = open(file, 'r')
 
-for i,line in enumerate(f):
-	line = line.strip()
-	os.rename(lista[i], line)
-	if verbose : print lista[i], "renamed to", line
+for line in f:
+	ficheiros.append(line.strip())
+	
+if (len(glob.glob('*.avi')) != len(ficheiros)):
+	exitErr = 'ERROR :: Number of .avi files and number of lines in ' + file + ' not equal!'
+	sys.exit(exitErr)
+
+
+list = sorted(glob.glob('*.avi'))
+
+for i,line in enumerate(ficheiros):
+	if renamer:
+		if verbose: 
+			print list[i], "renamed to", line
+		os.rename(list[i], line)
+	else:
+		print list[i], " --> ", line
 
 f.close()
