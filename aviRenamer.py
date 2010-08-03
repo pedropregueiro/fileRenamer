@@ -4,7 +4,6 @@ import sys, os, glob, getopt
 
 verbose = False
 renamer = False
-dry = True
 list = []
 files = []
 oldFiles = []
@@ -20,8 +19,6 @@ for opt, arg in options:
 			ext = '*'+arg
 		else:
 			ext = '*.'+arg
-	else:
-		dry = False
 		
 file = args[0]
 if not os.path.isfile(file):
@@ -44,14 +41,13 @@ if (len(oldFiles) != len(files)):
 	exitErr = '\nERROR :: Number of ' + ext + ' files ('+ str(len(oldFiles)) + ') and number of lines (' + str(len(files)) + ') in ' + file + ' not equal!\n'
 	sys.exit(exitErr)
 
-list = sorted(oldFiles)
+oldFiles = sorted(oldFiles)
 for i,line in enumerate(files):
 	if renamer:
 		if verbose: 
-			print list[i], "renamed to", line
-		os.rename(list[i], line)
+			print oldFiles[i], "renamed to", line
+		os.rename(oldFiles[i], line)
 	else:
-		print list[i], " --> ", line
-
+		print oldFiles[i], " --> ", line
 		
 f.close()
